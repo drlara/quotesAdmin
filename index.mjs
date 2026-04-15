@@ -21,6 +21,25 @@ app.get('/', (req, res) => {
    res.render('home.ejs')
 });
 
+app.get('/authors', async (req, res) => {
+   let sql = `SELECT authorId, firstName, lastName
+              FROM authors
+              ORDER BY lastName`;
+    const [authors] = await pool.query(sql); 
+    console.log(authors);              
+   res.render('authors.ejs', {authors})
+});
+
+//Displays the form to update an existing author
+app.get('/updateAuthor', async (req, res) => {
+   let authorId = req.query.authorId;
+   let sql = `SELECT *, DATE_FORMAT(dob, '%Y-%m-%d') ISOdob, DATE_FORMAT(dod, '%Y-%m-%d') ISOdod
+              FROM authors
+              WHERE authorId = ?`;
+   const [authorInfo] = await pool.query(sql, [authorId]); 
+   res.render('updateAuthor.ejs', {authorInfo})
+});
+
 //route to display the form to add a new author
 app.get('/addAuthor', (req, res) => {
    res.render('addAuthor.ejs')
