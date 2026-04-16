@@ -21,6 +21,32 @@ app.get('/', (req, res) => {
    res.render('home.ejs')
 });
 
+//Gets all quotes from database and display them
+app.get('/quotes', async(req, res) => {
+   let sql = `SELECT quoteId, quote
+              FROM quotes
+              ORDER BY quote`;
+   const [quotes] = await pool.query(sql);           
+   res.render('quotes.ejs', {quotes})
+});
+
+//Getting all info for a specific quote based on the quoteId
+app.get('/updateQuote', async(req, res) => {
+   let quoteId = req.query.quoteId;
+   let sql = `SELECT *
+              FROM quotes
+              WHERE quoteId = ?`;
+   const [quoteInfo] = await pool.query(sql, [quoteId]);              
+
+   let sql2 = `SELECT authorId, firstName, lastName
+               FROM authors
+               ORDER BY lastName`;
+   const [authorList] = await pool.query(sql2);              
+           
+   res.render('updateQuote.ejs', {quoteInfo, authorList})
+});
+
+
 app.get('/authors', async (req, res) => {
    let sql = `SELECT authorId, firstName, lastName
               FROM authors

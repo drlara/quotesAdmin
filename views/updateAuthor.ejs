@@ -9,13 +9,6 @@
     
     <h1> Updating Author </h1>
 
-    <%= authorInfo[0].firstName %>  <br>
-    <%= authorInfo[0].lastName %>  <br>
-    <%= authorInfo[0].dob %>  <br>
-    <%= authorInfo[0].sex %> <br>
-
-
-
     <form action="/updateAuthor" method="POST">
         <input type="hidden" name="authorId" value="<%= authorInfo[0].authorId %>">
         First Name: 
