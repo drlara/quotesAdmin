@@ -13,6 +13,8 @@
     
     <form action="/updateQuote" method="POST">
 
+        <input type="hidden" name="quoteId" value="<%=quoteInfo[0].quoteId%>">
+
         Quote: <textarea name="quote"><%=quoteInfo[0].quote%></textarea><br>
 
         Category: 
