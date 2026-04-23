@@ -9,10 +9,10 @@ app.use(express.urlencoded({extended:true}));
 
 //setting up database connection pool, replace values in red
 const pool = mysql.createPool({
-    host: "sh4ob67ph9l80v61.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-    user: "w9c7lwn8um1o99yj",
-    password: "u3rw8lbcasz2h307",
-    database: "pyn5h5u7iu857dd2",
+    host: "izm96dhhnwr2ieg0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+    user: "llxog34wkoifo03e",
+    password: "l9rjsy53pxkcvob5",
+    database: "f4h7xzmqz65vtwor",
     connectionLimit: 10,
     waitForConnections: true
 });
@@ -41,9 +41,14 @@ app.get('/updateQuote', async(req, res) => {
    let sql2 = `SELECT authorId, firstName, lastName
                FROM authors
                ORDER BY lastName`;
-   const [authorList] = await pool.query(sql2);              
+   const [authorList] = await pool.query(sql2);  
+   
+   let sql3 = `SELECT DISTINCT category
+               FROM quotes
+               ORDER BY category`;
+   const [categoryList] = await pool.query(sql3);
            
-   res.render('updateQuote.ejs', {quoteInfo, authorList})
+   res.render('updateQuote.ejs', {quoteInfo, authorList, categoryList})
 });
 
 
@@ -70,20 +75,30 @@ app.post('/updateAuthor', async (req, res) => {
    let firstName = req.body.firstName;
    let lastName = req.body.lastName;
    let dob = req.body.dob;
+   let dod = req.body.dod;
    let sex = req.body.sex;
+   let bio = req.body.bio;
+   let profession = req.body.profession;
+   let country = req.body.country;
+   let portrait = req.body.portrait;
    let authorId = req.body.authorId;
 
    let sql = `UPDATE authors
-              SET
-              firstName = ?,
-              lastName = ?,
-              dob = ?,
-              sex = ?
-              WHERE authorId = ?
-              `;
-   let sqlParams = [firstName, lastName, dob, sex, authorId];              
-   const [rows] = await pool.query(sql, sqlParams);
-   res.redirect('/authors')
+              SET firstName = ?,
+                  lastName = ?,
+                  dob = ?,
+                  dod = ?,
+                  sex = ?,
+                  biography = ?,
+                  profession = ?,
+                  country = ?,
+                  portrait = ?
+              WHERE authorId = ?`;
+
+   let sqlParams = [firstName, lastName, dob, dod, sex, bio, profession, country, portrait, authorId];
+   await pool.query(sql, sqlParams);
+
+   res.redirect('/authors');
 });
 
 //route to display the form to add a new author
@@ -97,20 +112,47 @@ app.post('/addAuthor', async (req, res) => {
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
     let dob = req.body.dob;
+    let dod = req.body.dod;
+    let sex = req.body.sex;
     let bio = req.body.bio;
+    let profession = req.body.profession;
+    let country = req.body.country;
+    let portrait = req.body.portrait;
 
     let sql = `INSERT INTO authors
-               (firstName, lastName, dob, biography)
+               (firstName, lastName, dob, dod, sex, biography, profession, country, portrait)
                VALUES
-               (?, ?, ?, ?)`;
-    let sqlParams = [firstName, lastName, dob, bio];
+               (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    let sqlParams = [firstName, lastName, dob, dod, sex, bio, profession, country, portrait];
+
+    await pool.query(sql, sqlParams);
+
+    res.redirect('/authors');
+});
+
+app.get('/deleteAuthor', async (req, res) => {
+    let authorId = req.query.authorId;
+    let sql = `SELECT *
+               FROM authors
+               WHERE authorId = ?`;
+    const [authorInfo] = await pool.query(sql, [authorId]); 
+    res.render('deleteAuthor.ejs', {authorInfo})
+});
+
+app.post('/deleteAuthor', async (req, res) => {
+    let authorId = req.body.authorId;
+
+    let sql = `DELETE FROM authors
+               WHERE authorId = ?`;
+    let sqlParams = [authorId];
 
     const [rows] = await pool.query(sql, sqlParams);
 
-   res.redirect('/');
+
+   res.redirect('/authors');
 
 });
-
 //route to display the form to add a new quote
 app.get('/addQuote', (req, res) => {
 

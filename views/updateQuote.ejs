@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
+
+    <form action="/" method="GET">
+        <button>Home</button>
+    </form>
+
     <h1> Update Quote </h1>
 
     Caegory: <%=quoteInfo[0].category%> <br>
-    AuthorId: <%=quoteInfo[0].authorId%> <br>
-    
-    <form action="/updateQuote" method="POST">
+        AuthorId: <%=quoteInfo[0].authorId%> <br>
 
-        <input type="hidden" name="quoteId" value="<%=quoteInfo[0].quoteId%>">
+            <form action="/updateQuote" method="POST">
 
-        Quote: <textarea name="quote"><%=quoteInfo[0].quote%></textarea><br>
+                Quote: <textarea name="quote"><%=quoteInfo[0].quote%></textarea><br>
 
-        Category: 
-        <select name="category">
-            <!-- List of categories must come from the db -->
-            <option>Motivational</option>
-        </select>
-        <br>
+                Category:
+                <select name="category">
+                    <!-- List of categories must come from the db -->
+                    <option value="">Select Category</option>
+                    <% for (let i of categoryList) { %>
+                        <option <%=(quoteInfo[0].category==i.category)?"selected":""%>
+                            value="<%=i.category%>"> <%=i.category%>
+                                    <% } %>
+                </select>
+                <br>
 
-        Author: 
-        <select name="authorId">
-            <!-- List of authors must come from the db -->
-            <option value="">Select Author</option>
-            <% for (let i of authorList) { %>
-                <option 
-                <%=(quoteInfo[0].authorId == i.authorId)?"selected":""%>
-                 value="<%=i.authorId%>"> <%=i.firstName%> <%=i.lastName%>
-            <% } %>
-        </select>
-        <br>
+                Author:
+                <select name="authorId">
+                    <!-- List of authors must come from the db -->
+                    <option value="">Select Author</option>
+                    <% for (let i of authorList) { %>
+                        <option <%=(quoteInfo[0].authorId==i.authorId)?"selected":""%>
+                            value="<%=i.authorId%>"> <%=i.firstName%>
+                                    <%=i.lastName%>
+                                        <% } %>
+                </select>
+                <br>
 
-        <button> Update Quote! </button>
+                <button> Update Quote! </button>
 
-    </form>
+            </form>
 
 </body>
+
 </html>

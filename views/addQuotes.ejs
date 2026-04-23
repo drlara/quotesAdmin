@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
+
+    <form action="/" method="GET">
+        <button>Home</button>
+    </form>
+
     <h1> Adding a New Quote</h1>
 
     <form action="/newQuote" method="POST">
 
         Quote: <textarea name="quote"></textarea><br>
 
-        Category: 
+        Category:
         <select name="category">
             <!-- List of categories must come from the db -->
             <option>Motivational</option>
         </select>
         <br>
 
-        Author: 
+        Author:
         <select name="authorId">
             <!-- List of categories must come from the db -->
             <option value="1">Albert Einstein</option>
@@ -32,4 +39,5 @@
 
 
 </body>
+
 </html>
